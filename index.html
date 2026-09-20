@@ -480,12 +480,8 @@ body {
     dou-a-vida-por-um-beijo.mp3
 
     en la misma carpeta que este HTML.
-
-    Luego elimina los comentarios de <audio>.
     =====================================================
     -->
-
-    
 
     <audio id="musica" loop>
         <source
@@ -493,8 +489,6 @@ body {
             type="audio/mpeg"
         >
     </audio>
-
-
 
 </section>
 
@@ -519,6 +513,12 @@ const canvas =
 
 const ctx =
     canvas.getContext("2d");
+
+const audio =
+    document.getElementById("musica");
+
+const musicaBtn =
+    document.getElementById("musicaBtn");
 
 let W;
 let H;
@@ -814,15 +814,7 @@ function drawGalaxy(time) {
             );
 
             ctx.fillStyle =
-                `rgba(
-                    255,
-                    245,
-                    205,
-                    ${Math.max(
-                        0.05,
-                        twinkle
-                    )}
-                )`;
+                `rgba(255,245,205,${Math.max(0.05, twinkle)})`;
 
             ctx.fill();
 
@@ -877,12 +869,7 @@ function drawGalaxy(time) {
         );
 
         ctx.fillStyle =
-            `rgba(
-                255,
-                210,
-                75,
-                ${alpha}
-            )`;
+            `rgba(255,210,75,${alpha})`;
 
         ctx.fill();
     }
@@ -968,12 +955,7 @@ function drawGalaxy(time) {
                 );
 
                 ctx.fillStyle =
-                    `rgba(
-                        255,
-                        225,
-                        105,
-                        ${glow}
-                    )`;
+                    `rgba(255,225,105,${glow})`;
 
                 ctx.shadowBlur = 18;
 
@@ -1045,6 +1027,8 @@ function drawGalaxy(time) {
         drawGalaxy
     );
 }
+
+requestAnimationFrame(drawGalaxy);
 
 
 /* =====================================================
@@ -1124,12 +1108,7 @@ abrir.addEventListener(
                     () => {
 
                         p.el.style.color =
-                            "rgba(
-                                255,
-                                226,
-                                125,
-                                .72
-                            )";
+                            "rgba(255,226,125,.72)";
 
                     },
                     p.delay * 1000
@@ -1141,11 +1120,6 @@ abrir.addEventListener(
 
         /* MÚSICA */
 
-        const audio =
-            document.getElementById(
-                "musica"
-            );
-
         if (audio) {
 
             audio.volume = 0.42;
@@ -1155,66 +1129,43 @@ abrir.addEventListener(
                     () => {}
                 );
 
-            document
-                .getElementById(
-                    "musicaBtn"
-                )
-                .style.opacity = "1";
+            musicaBtn.style.opacity = "1";
         }
-
-
-        setTimeout(
-            () => {
-
-                document
-                    .getElementById(
-                        "musicaBtn"
-                    )
-                    .style.opacity = "1";
-
-            },
-            3500
-        );
 
     }
 );
 
 
 /* =====================================================
-   CONTROL DE MÚSICA
+   CONTROL DE MÚSICA (play / pausa)
 ===================================================== */
 
-document
-.getElementById("musicaBtn")
-.addEventListener(
-"click",
-const audio =
-document.getElementById(
-);
-"musica"
-if (!audio)
-return;
-if (audio.paused),
-audio.play();
-document
-.getElementById(
-"musicaBtn"
-.textContent =
-Música";
-} else {
-audio.pause();
-document
-.getElementById(
-"musicaBtn"
-.textContent
-Música";
+musicaBtn.addEventListener(
+    "click",
+    () => {
 
-}
+        if (!audio)
+            return;
+
+        if (audio.paused) {
+
+            audio.play()
+                .catch(() => {});
+
+            musicaBtn.textContent = "🎵 Pausar";
+
+        } else {
+
+            audio.pause();
+
+            musicaBtn.textContent = "🎵 Música";
+
+        }
+
     }
-    };
-    
-drawGalaxy(0);
+);
+
 </script>
+
 </body>
 </html>
-    
