@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Un pequeño universo para Eskarleth 🌻</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Georgia, "Times New Roman", serif;
+    background: #02030a;
+    color: white;
+}
+
+body {
+    position: relative;
+}
+
+/* =========================
+   CARTA INICIAL
+========================= */
+
+#carta {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+
+    background:
+        radial-gradient(
+            circle at 50% 20%,
+            rgba(255, 205, 70, 0.08),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 20% 80%,
+            rgba(255, 190, 30, 0.05),
+            transparent 30%
+        ),
+        #02030a;
+
+    transition:
+        opacity 2s ease,
+        visibility 2s ease;
+}
+
+.carta-card {
+    width: min(680px, 94vw);
+
+    padding: 42px 34px;
+
+    text-align: center;
+
+    border: 1px solid rgba(255, 220, 100, 0.22);
+    border-radius: 28px;
+
+    background: rgba(8, 9, 20, 0.72);
+
+    box-shadow:
+        0 0 70px rgba(255, 190, 30, 0.08),
+        inset 0 0 40px rgba(255, 255, 255, 0.025);
+
+    backdrop-filter: blur(12px);
+
+    animation: aparecer 2s ease both;
+}
+
+.carta-card h1 {
+    color: #ffe58a;
+
+    font-size: clamp(27px, 5vw, 45px);
+
+    margin-bottom: 25px;
+
+    text-shadow:
+        0 0 22px rgba(255, 210, 70, 0.3);
+}
+
+.carta-card p {
+    color: #e9e6dc;
+
+    font-size: clamp(17px, 3.8vw, 21px);
+
+    line-height: 1.8;
+
+    margin-bottom: 14px;
+}
+
+.carta-card .firma {
+    color: #ffd95c;
+
+    margin-top: 23px;
+
+    font-style: italic;
+}
+
+#abrir {
+    margin-top: 27px;
+
+    border: 1px solid rgba(255, 222, 100, 0.6);
+
+    color: #241b05;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffe98b,
+            #ffc928
+        );
+
+    padding: 15px 27px;
+
+    border-radius: 50px;
+
+    font-size: 17px;
+
+    font-family: inherit;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 28px rgba(255, 203, 54, 0.22);
+
+    transition: 0.3s ease;
+}
+
+#abrir:hover {
+    transform: scale(1.04);
+
+    box-shadow:
+        0 0 40px rgba(255, 203, 54, 0.4);
+}
+
+/* =========================
+   UNIVERSO
+========================= */
+
+#universo {
+    position: absolute;
+    inset: 0;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: opacity 3s ease;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            rgba(31, 24, 58, 0.45),
+            transparent 55%
+        ),
+        #010208;
+}
+
+#espacio {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+}
+
+#contenido {
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+}
+
+/* =========================
+   TÍTULO
+========================= */
+
+.titulo {
+    position: absolute;
+
+    top: 6%;
+
+    width: 100%;
+
+    text-align: center;
+
+    color: rgba(255, 235, 155, 0.92);
+
+    font-size: clamp(20px, 4vw, 31px);
+
+    letter-spacing: 2px;
+
+    opacity: 0;
+
+    transition: opacity 3s ease;
+
+    text-shadow:
+        0 0 25px rgba(255, 211, 72, 0.5);
+}
+
+/* =========================
+   MENSAJE
+========================= */
+
+.mensaje {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: min(680px, 88vw);
+
+    max-height: 82vh;
+
+    overflow-y: auto;
+
+    text-align: center;
+
+    padding: 30px 26px;
+
+    border-radius: 25px;
+
+    background: rgba(6, 7, 16, 0.94);
+
+    border: 1px solid rgba(255, 220, 100, 0.25);
+
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.6);
+
+    backdrop-filter: blur(10px);
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition: opacity 0.6s ease;
+}
+
+.mensaje.visible {
+    opacity: 1;
+
+    pointer-events: auto;
+}
+
+.cerrar-mensaje {
+    position: absolute;
+
+    top: 12px;
+    right: 14px;
+
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(255, 220, 100, 0.4);
+
+    background: rgba(20, 20, 30, 0.7);
+
+    color: #ffe79a;
+
+    font-size: 16px;
+
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.mensaje h2 {
+    color: #ffe28a;
+
+    font-size: clamp(25px, 6vw, 38px);
+
+    margin-bottom: 22px;
+
+    text-shadow:
+        0 0 25px rgba(255, 210, 80, 0.35);
+}
+
+.mensaje p {
+    color: #f1eee4;
+
+    font-size: clamp(16px, 3.6vw, 20px);
+
+    line-height: 1.75;
+
+    margin: 7px 0;
+}
+
+.mensaje .destacado {
+    color: #ffd75a;
+
+    font-size: 1.08em;
+}
+
+.final {
+    margin-top: 20px !important;
+
+    font-size: clamp(18px, 4vw, 23px) !important;
+
+    color: #ffe99c !important;
+}
+
+/* =========================
+   BOTÓN DE MÚSICA
+========================= */
+
+#musicaBtn {
+    position: absolute;
+
+    right: 18px;
+    bottom: 18px;
+
+    z-index: 10;
+
+    pointer-events: auto;
+
+    border: 1px solid rgba(255, 225, 120, 0.35);
+
+    color: #ffe79a;
+
+    background: rgba(10, 10, 20, 0.55);
+
+    padding: 10px 15px;
+
+    border-radius: 30px;
+
+    font-family: inherit;
+
+    cursor: pointer;
+
+    backdrop-filter: blur(8px);
+
+    opacity: 0;
+
+    transition: opacity 3s ease;
+}
+
+/* =========================
+   GIRASOL CENTRAL
+========================= */
+
+.girasol-central {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    cursor: pointer;
+
+    transition:
+        opacity 2.5s ease,
+        transform 0.3s ease;
+
+    animation: latido 2.6s ease-in-out infinite;
+}
+
+.girasol-emoji {
+    font-size: clamp(46px, 11vw, 72px);
+
+    line-height: 1;
+
+    filter: drop-shadow(0 0 18px rgba(255, 210, 60, 0.65));
+
+    transition: filter 0.3s ease;
+}
+
+.girasol-texto {
+    font-family: Georgia, "Times New Roman", serif;
+    font-style: italic;
+
+    font-size: clamp(13px, 3vw, 16px);
+
+    color: #ffe79a;
+
+    background: rgba(10, 10, 20, 0.45);
+
+    padding: 4px 12px;
+
+    border-radius: 20px;
+
+    border: 1px solid rgba(255, 220, 100, 0.3);
+
+    text-shadow: 0 0 10px rgba(255, 210, 70, 0.5);
+
+    white-space: nowrap;
+
+    animation: parpadeo 2s ease-in-out infinite;
+}
+
+.girasol-central.visible {
+    opacity: 1;
+
+    pointer-events: auto;
+}
+
+.girasol-central:hover .girasol-emoji {
+    filter: drop-shadow(0 0 30px rgba(255, 220, 90, 0.9));
+}
+
+.girasol-central.abierto {
+    opacity: 0.4;
+
+    pointer-events: none;
+
+    animation: none;
+}
+
+.girasol-central.abierto .girasol-texto {
+    display: none;
+}
+
+@keyframes latido {
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.08);
+    }
+}
+
+@keyframes parpadeo {
+    0%,
+    100% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* =========================
+   ANIMACIONES
+========================= */
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================
+   CELULARES
+========================= */
+
+@media (max-width: 600px) {
+
+    .carta-card {
+        padding: 32px 23px;
+    }
+
+    .carta-card p {
+        line-height: 1.65;
+    }
+
+    .mensaje {
+        padding: 18px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     CARTA INICIAL
+===================================================== -->
+
+<section id="carta">
+
+    <div class="carta-card">
+
+        <h1>
+            🌻 Feliz día de las flores amarillas 🌻
+        </h1>
+
+        <p>
+            Eskarleth, sé que quizá este no sea un buen momento.
+        </p>
+
+        <p>
+            Y precisamente por eso no quiero que esto sea una carga
+            ni que sientas que tienes que responderme.
+        </p>
+
+        <p>
+            Solo quería dejarte algo bonito.
+            Un pequeño lugar donde, por un momento,
+            todo pudiera florecer para ti.
+        </p>
+
+        <p class="firma">
+            Con mucho cariño, para ti. 💛
+        </p>
+
+        <button id="abrir">
+            ✨ Abrir tu universo ✨
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     UNIVERSO
+===================================================== -->
+
+<section id="universo">
+
+    <canvas id="espacio"></canvas>
+
+    <div id="contenido">
+
+        <div class="titulo">
+            Para Eskarleth, con cariño 💛
+        </div>
+
+        <div class="girasol-central" title="Presióname">
+            <div class="girasol-emoji">🌻</div>
+            <div class="girasol-texto">Presióname</div>
+        </div>
+
+        <div class="mensaje">
+
+            <button class="cerrar-mensaje" aria-label="Cerrar">
+                ✕
+            </button>
+
+            <h2>
+                Eskarleth 💛
+            </h2>
+
+            <p>
+                Mira las flores.
+                Cada una nació de una pequeña estrella,
+                solamente para encontrarte.
+            </p>
+
+            <p class="destacado">
+                Te quiero.
+            </p>
+
+            <p class="destacado">
+                Estoy orgulloso de ti.
+            </p>
+
+            <p class="destacado">
+                Eres una gran mujer.
+            </p>
+
+            <p>
+                Nunca olvides lo valiosa que eres.
+                No tienes que estar bien todo el tiempo.
+                También está bien descansar.
+            </p>
+
+            <p>
+                Incluso en los días más difíciles,
+                sigues siendo alguien muy especial.
+            </p>
+
+            <p>
+                No tienes que responderme.
+                No tienes que decir nada.
+            </p>
+
+            <p>
+                Solo quería que supieras que alguien pensó en ti
+                y quiso llenar un pequeño rincón del universo
+                de flores amarillas.
+            </p>
+
+            <p class="final">
+                Si hoy el mundo se siente demasiado oscuro,
+                recuerda que aquí siempre habrá un pequeño universo
+                que florece para ti. 🌻
+            </p>
+
+            <p class="final">
+                Te quiero, Eskarleth. 💛
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <button id="musicaBtn">
+        🎵 Música
+    </button>
+
+
+    <!--
+    =====================================================
+    MÚSICA
+
+    Coloca el archivo:
+
+    dou-a-vida-por-um-beijo.mp3
+
+    en la misma carpeta que este HTML.
+    =====================================================
+    -->
+
+    <audio id="musica" loop>
+        <source
+            src="dou-a-vida-por-um-beijo.mp3"
+            type="audio/mpeg"
+        >
+    </audio>
+
+</section>
+
+
+<script>
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+const carta =
+    document.getElementById("carta");
+
+const universo =
+    document.getElementById("universo");
+
+const abrir =
+    document.getElementById("abrir");
+
+const canvas =
+    document.getElementById("espacio");
+
+const ctx =
+    canvas.getContext("2d");
+
+const audio =
+    document.getElementById("musica");
+
+const musicaBtn =
+    document.getElementById("musicaBtn");
+
+const contenido =
+    document.getElementById("contenido");
+
+const girasol =
+    document.querySelector(".girasol-central");
+
+let W;
+let H;
+
+let stars = [];
+let flowers = [];
+let phrases = [];
+
+let bloom = 0;
+
+let started = false;
+
+
+/* =====================================================
+   RESIZE
+===================================================== */
+
+function resize() {
+
+    const dpr =
+        window.devicePixelRatio || 1;
+
+    canvas.width =
+        window.innerWidth * dpr;
+
+    canvas.height =
+        window.innerHeight * dpr;
+
+    canvas.style.width =
+        window.innerWidth + "px";
+
+    canvas.style.height =
+        window.innerHeight + "px";
+
+    ctx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+    );
+
+    W = window.innerWidth;
+    H = window.innerHeight;
+}
+
+window.addEventListener(
+    "resize",
+    resize
+);
+
+resize();
+
+
+/* =====================================================
+   ESTRELLAS
+===================================================== */
+
+for (let i = 0; i < 500; i++) {
+
+    stars.push({
+
+        x: Math.random(),
+
+        y: Math.random(),
+
+        r:
+            Math.random() * 1.6 + 0.2,
+
+        a:
+            Math.random() * 0.75 + 0.15,
+
+        speed:
+            Math.random() * 0.012 + 0.003
+
+    });
+
+}
+
+
+/* =====================================================
+   FLORES
+===================================================== */
+
+const flowerTypes = [
+
+    "🌻",
+    "🌷",
+    "🌼",
+    "🌻",
+    "🌼",
+    "🌷"
+
+];
+
+
+for (let i = 0; i < 34; i++) {
+
+    flowers.push({
+
+        x: Math.random(),
+
+        y: Math.random(),
+
+        targetX:
+            0.15 + Math.random() * 0.70,
+
+        targetY:
+            0.18 + Math.random() * 0.68,
+
+        size:
+            18 + Math.random() * 27,
+
+        rot:
+            Math.random() *
+            Math.PI *
+            2,
+
+        delay:
+            Math.random() * 5,
+
+        type:
+            flowerTypes[
+                i % flowerTypes.length
+            ]
+
+    });
+
+}
+
+
+/* =====================================================
+   FRASES FLOTANTES
+===================================================== */
+
+const words = [
+
+    "Te quiero 💛",
+
+    "Eres una gran mujer",
+
+    "Estoy orgulloso de ti",
+
+    "Nunca olvides cuánto vales",
+
+    "Mereces días llenos de luz",
+
+    "También está bien descansar",
+
+    "Eres muy especial",
+
+    "No tienes que estar bien todo el tiempo",
+
+    "Que nunca te falte la luz",
+
+    "Para ti, siempre 🌻"
+
+];
+
+
+words.forEach(
+    (text, i) => {
+
+        const el =
+            document.createElement("div");
+
+        el.textContent = text;
+
+        el.style.position =
+            "absolute";
+
+        el.style.left =
+            (8 + Math.random() * 84) + "%";
+
+        el.style.top =
+            (15 + Math.random() * 72) + "%";
+
+        el.style.color =
+            "rgba(255,226,125,0)";
+
+        el.style.fontSize =
+            (13 + Math.random() * 5) + "px";
+
+        el.style.textShadow =
+            "0 0 15px rgba(255,210,70,.7)";
+
+        el.style.transition =
+            "opacity 2.5s ease";
+
+        el.style.transform =
+            "translate(-50%,-50%)";
+
+        el.style.whiteSpace =
+            "nowrap";
+
+        el.style.fontFamily =
+            "Georgia, serif";
+
+        document
+            .getElementById("contenido")
+            .appendChild(el);
+
+        phrases.push({
+
+            el: el,
+
+            delay:
+                7 + i * 1.3
+
+        });
+
+    }
+);
+
+
+/* =====================================================
+   DIBUJAR UNIVERSO
+===================================================== */
+
+function drawGalaxy(time) {
+
+    ctx.clearRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    /* FONDO */
+
+    const gradient =
+        ctx.createRadialGradient(
+            W / 2,
+            H / 2,
+            0,
+            W / 2,
+            H / 2,
+            Math.max(W, H) * 0.7
+        );
+
+    gradient.addColorStop(
+        0,
+        "rgba(31,22,58,.75)"
+    );
+
+    gradient.addColorStop(
+        0.4,
+        "rgba(9,9,25,.55)"
+    );
+
+    gradient.addColorStop(
+        1,
+        "rgba(1,2,8,1)"
+    );
+
+    ctx.fillStyle =
+        gradient;
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    /* ESTRELLAS */
+
+    stars.forEach(
+        s => {
+
+            const twinkle =
+                s.a +
+                Math.sin(
+                    time *
+                    s.speed *
+                    100 +
+                    s.x *
+                    30
+                ) *
+                0.2;
+
+            ctx.beginPath();
+
+            ctx.arc(
+                s.x * W,
+                s.y * H,
+                s.r,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fillStyle =
+                `rgba(255,245,205,${Math.max(0.05, twinkle)})`;
+
+            ctx.fill();
+
+        }
+    );
+
+
+    /* GALAXIA DORADA */
+
+    ctx.save();
+
+    ctx.translate(
+        W / 2,
+        H / 2
+    );
+
+    for (let i = 0; i < 950; i++) {
+
+        const t =
+            i / 950;
+
+        const angle =
+            t * 20 +
+            time * 0.00008;
+
+        const radius =
+            t *
+            Math.min(W, H) *
+            0.42;
+
+        const x =
+            Math.cos(angle) *
+            radius;
+
+        const y =
+            Math.sin(angle) *
+            radius *
+            0.48;
+
+        const alpha =
+            0.03 +
+            t * 0.15;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            y,
+            Math.random() * 1.4 + 0.3,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fillStyle =
+            `rgba(255,210,75,${alpha})`;
+
+        ctx.fill();
+    }
+
+    ctx.restore();
+
+
+    /* =================================================
+       LAS ESTRELLAS SE CONVIERTEN EN FLORES
+    ================================================= */
+
+    flowers.forEach(
+        f => {
+
+            const age =
+                bloom -
+                f.delay;
+
+            if (age < 0)
+                return;
+
+
+            const p =
+                Math.min(
+                    1,
+                    age / 2.3
+                );
+
+
+            const ease =
+                1 -
+                Math.pow(
+                    1 - p,
+                    3
+                );
+
+
+            const sx =
+                (f.x - 0.5) *
+                W +
+                W / 2;
+
+            const sy =
+                (f.y - 0.5) *
+                H +
+                H / 2;
+
+
+            const tx =
+                f.targetX * W;
+
+            const ty =
+                f.targetY * H;
+
+
+            const x =
+                sx +
+                (tx - sx) *
+                ease;
+
+            const y =
+                sy +
+                (ty - sy) *
+                ease;
+
+
+            /* ESTRELLA QUE NACE */
+
+            if (p < 0.72) {
+
+                const glow =
+                    1 -
+                    p / 0.72;
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    x,
+                    y,
+                    2 + glow * 5,
+                    0,
+                    Math.PI * 2
+                );
+
+                ctx.fillStyle =
+                    `rgba(255,225,105,${glow})`;
+
+                ctx.shadowBlur = 18;
+
+                ctx.shadowColor =
+                    "#ffd84d";
+
+                ctx.fill();
+
+                ctx.shadowBlur = 0;
+            }
+
+
+            /* FLOR */
+
+            if (p > 0.48) {
+
+                const fp =
+                    (p - 0.48) /
+                    0.52;
+
+                ctx.save();
+
+                ctx.translate(
+                    x,
+                    y
+                );
+
+                ctx.rotate(
+                    f.rot
+                );
+
+                ctx.globalAlpha =
+                    fp;
+
+                ctx.font =
+                    `${f.size}px serif`;
+
+                ctx.textAlign =
+                    "center";
+
+                ctx.textBaseline =
+                    "middle";
+
+                ctx.shadowBlur =
+                    18;
+
+                ctx.shadowColor =
+                    "rgba(255,210,60,.65)";
+
+                ctx.fillText(
+                    f.type,
+                    0,
+                    0
+                );
+
+                ctx.restore();
+
+                ctx.globalAlpha = 1;
+            }
+
+        }
+    );
+
+
+    bloom += 0.012;
+
+
+    requestAnimationFrame(
+        drawGalaxy
+    );
+}
+
+requestAnimationFrame(drawGalaxy);
+
+
+/* =====================================================
+   ABRIR UNIVERSO
+===================================================== */
+
+abrir.addEventListener(
+    "click",
+    () => {
+
+        if (started)
+            return;
+
+        started = true;
+
+
+        /* DESAPARECE LA CARTA */
+
+        carta.style.opacity =
+            "0";
+
+        carta.style.visibility =
+            "hidden";
+
+
+        /* APARECE UNIVERSO */
+
+        universo.style.visibility =
+            "visible";
+
+
+        setTimeout(
+            () => {
+
+                universo.style.opacity =
+                    "1";
+
+            },
+            100
+        );
+
+
+        /* TÍTULO */
+
+        setTimeout(
+            () => {
+
+                document
+                    .querySelector(".titulo")
+                    .style.opacity = "1";
+
+            },
+            2500
+        );
+
+
+        /* GIRASOL CENTRAL (el mensaje aparece al tocarlo) */
+
+        setTimeout(
+            () => {
+
+                girasol.classList.add("visible");
+
+            },
+            5500
+        );
+
+
+        /* FRASES */
+
+        phrases.forEach(
+            p => {
+
+                setTimeout(
+                    () => {
+
+                        p.el.style.color =
+                            "rgba(255,226,125,.72)";
+
+                    },
+                    p.delay * 1000
+                );
+
+            }
+        );
+
+
+        /* MÚSICA */
+
+        if (audio) {
+
+            audio.volume = 0.42;
+
+            audio.play()
+                .catch(
+                    () => {}
+                );
+
+            musicaBtn.style.opacity = "1";
+        }
+
+    }
+);
+
+
+/* =====================================================
+   GIRASOL CENTRAL -> REVELA EL MENSAJE
+===================================================== */
+
+girasol.addEventListener(
+    "click",
+    e => {
+
+        e.stopPropagation();
+
+        document
+            .querySelector(".mensaje")
+            .classList.add("visible");
+
+        girasol.classList.add("abierto");
+
+    }
+);
+
+
+/* =====================================================
+   CERRAR EL MENSAJE (para volver a ver el universo)
+===================================================== */
+
+document
+    .querySelector(".cerrar-mensaje")
+    .addEventListener(
+        "click",
+        e => {
+
+            e.stopPropagation();
+
+            document
+                .querySelector(".mensaje")
+                .classList.remove("visible");
+
+            girasol.classList.remove("abierto");
+
+        }
+    );
+
+
+/* =====================================================
+   CONTROL DE MÚSICA (play / pausa)
+===================================================== */
+
+musicaBtn.addEventListener(
+    "click",
+    () => {
+
+        if (!audio)
+            return;
+
+        if (audio.paused) {
+
+            audio.play()
+                .catch(() => {});
+
+            musicaBtn.textContent = "🎵 Pausar";
+
+        } else {
+
+            audio.pause();
+
+            musicaBtn.textContent = "🎵 Música";
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
